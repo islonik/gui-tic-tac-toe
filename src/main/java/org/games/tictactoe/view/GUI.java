@@ -22,7 +22,6 @@ public class GUI extends JFrame implements ActionListener
     private Options options;
     private ImageOptions imageOptions;
     private GameSettings gameSettings;
-    private boolean isCrossFirstImage  = true;
     private Controller controller;
 
     private GUI()
@@ -85,7 +84,6 @@ public class GUI extends JFrame implements ActionListener
     {
         if(e.getSource() == newGameItem)
         {
-            isCrossFirstImage = (gameSettings.isOddGame()) ? false : true;
             this.unlockAllCells();
             controller.newGame(options);
             controller.makeFirstComputerMove(); // not odd game
@@ -271,15 +269,13 @@ public class GUI extends JFrame implements ActionListener
         try
         {
             ImageIcon image;
-            if(isCrossFirstImage == true)
+            if(gameSettings.isFirstGamerMove())
             {
                 image = new ImageIcon(getClass().getResource(imageOptions.getPictureOne()));
-                isCrossFirstImage  = false;
             }
             else
             {
                 image = new ImageIcon(getClass().getResource(imageOptions.getPictureTwo()));
-                isCrossFirstImage  = true;
             }
 
             cells.get(button-1).setIcon(image);

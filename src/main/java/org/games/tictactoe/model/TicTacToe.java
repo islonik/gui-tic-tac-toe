@@ -6,10 +6,10 @@ package org.games.tictactoe.model;
  **/
 public class TicTacToe
 {
-    private boolean isSecondPlayerMove = false;
     private Player playerOne;
     private Player playerTwo;
     private GameField gameField;
+    private GameSettings gameSettings;
     private ArtificialIntelligence ai;
     private int computerMove;
 
@@ -18,28 +18,22 @@ public class TicTacToe
         this.playerOne = one;
         this.playerTwo = two;
         this.gameField = new GameField();
+        this.gameSettings = GameSettings.getInstance();
         this.ai = new ArtificialIntelligence(one, two, this.gameField);
-    }
-
-    public int getComputerMove()
-    {
-        return computerMove;
     }
 
     /**
      * @param button int player button
      */
-    public void action(int button)
+    public void makeHumanMove(int button)
     {
-        if(isSecondPlayerMove && !playerTwo.isComputer())
+        if(!gameSettings.isFirstGamerMove() && !playerTwo.isComputer())
         {
             this.gameField.setPlayer(playerTwo, button);
-            this.isSecondPlayerMove = false;
         }
         else
         {
             this.gameField.setPlayer(playerOne, button);
-            this.isSecondPlayerMove = true;
         }
 
         Player winner = gameField.getWinner();
@@ -47,8 +41,6 @@ public class TicTacToe
         {
             return;
         }
-
-        this.makeComputerMove();
     }
 
     public void makeComputerMove()
@@ -59,17 +51,17 @@ public class TicTacToe
             this.computerMove = this.ai.getNextMove();
         }
     }
+
+    public int getComputerMove()
+    {
+        return computerMove;
+    }
     
     public Player getWinner()
     {
         return gameField.getWinner();
     }
 
-    public boolean isComputer()
-    {
-        return playerTwo.isComputer();
-    }
-    
     public void printState()
     {
         for(int i = 0; i < 3; i++)

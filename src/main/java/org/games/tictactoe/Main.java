@@ -4,7 +4,7 @@ import org.games.tictactoe.controller.Controller;
 import org.games.tictactoe.view.GUI;
 
 /**
- * Trigger point of tic-tac-toe game.
+ * Entry point of Tic-tac-toe game.
  * @author Lipatov Nikita
  **/
 public class Main

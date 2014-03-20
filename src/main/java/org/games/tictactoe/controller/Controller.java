@@ -19,7 +19,7 @@ public class Controller {
     {
         settings = GameSettings.getInstance();
 
-        model = newGame(Options.getInstance());
+        newGame(Options.getInstance());
     }
 
     public GUI getView() {
@@ -38,19 +38,23 @@ public class Controller {
         this.model = model;
     }
 
-    public TicTacToe newGame(Options options)
+    public void newGame(Options options)
     {
         if(options.isFirstMoveAlwaysPlayerOne())
         {
             settings.setOddGame(true);
+            settings.setFirstGamerMove(true);
         }
         else if(options.isFirstMoveAlwaysPlayerTwo())
         {
             settings.setOddGame(false);
+            settings.setFirstGamerMove(false);
         }
         else
         {
-            settings.setOddGame(!settings.isOddGame());
+            boolean changeValue = settings.isOddGame() ? false : true;
+            settings.setOddGame(changeValue);
+            settings.setFirstGamerMove(changeValue);
         }
 
         Player playerOne = new Player();
@@ -58,6 +62,7 @@ public class Controller {
         playerOne.setName(options.getNamePlayerOne());
         Player playerTwo = new Player();
         playerTwo.setComputer(options.isSecondPlayerComputer());
+        settings.setComputer(options.isSecondPlayerComputer());
 
         if(options.isSecondPlayerComputer())
         {
@@ -68,19 +73,22 @@ public class Controller {
             playerTwo.setName(options.getNamePlayerTwo());
         }
 
+
         TicTacToe game = new TicTacToe(playerOne, playerTwo);
         this.model = game;
-        return game;
     }
 
     public void action(int type)
     {
-        model.action(type);
+        model.makeHumanMove(type);
+        settings.changeGamerMove();
 
-        if(model.isComputer() && view.hasFreeCells())
+        if(settings.isComputer() && view.hasFreeCells())
         {
+            model.makeComputerMove();
             int computerMove = model.getComputerMove();
             view.setUpImage(computerMove);
+            settings.changeGamerMove();
         }
 
         Player winner = model.getWinner();
@@ -101,11 +109,12 @@ public class Controller {
     {
         if(!settings.isOddGame())
         {
-            if(model.isComputer() && view.hasFreeCells())
+            if(settings.isComputer() && view.hasFreeCells())
             {
                 model.makeComputerMove();
                 int computerMove = model.getComputerMove();
                 view.setUpImage(computerMove);
+                settings.changeGamerMove();
             }
         }
     }
